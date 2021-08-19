@@ -68,7 +68,7 @@ $(".card .list-group").sortable( {
       .children()
       .each(function() {
         tempArr.push({
-          text = $(this)
+          text: $(this)
             .find("p")
             .text()
             .trim(),
