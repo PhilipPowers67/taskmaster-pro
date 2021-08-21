@@ -2,8 +2,7 @@ var tasks = {};
 
 var createTask = function(taskText, taskDate, taskList) {
   // create elements that make up a task item
-  var taskLi = $("<li>")
-    .addClass("list-group-item");
+  var taskLi = $("<li>").addClass("list-group-item");
   var taskSpan = $("<span>")
     .addClass("badge badge-primary badge-pill")
     .text(taskDate);
@@ -66,6 +65,7 @@ var auditTask = function(taskEl) {
   else if (Math.abs(moment().diff(time, "days")) <= 2) {
     $(taskEl).addClass("list-group-item-warning")
   }
+  console.log(taskEl);
 };
 
 $("#modalDueDate").datepicker( {
@@ -78,16 +78,20 @@ $(".card .list-group").sortable( {
   tolerance: "pointer",
   helper: "clone",
   activate: function(event, ui) {
-    // console.log("activate", this);
+    $(this).addClass("dropover");
+    $(".bottom-trash").addClass("bottom-trash-drag");
   },
   deactivate: function(event, ui) {
-    // console.log("deactivate", this);
+    $(this).removeClass("dropover");
+    $(".bottom-trash").removeClass("bottom-trash-drag");
   },
   over: function(event) {
-    // console.log("over", event.target);
+    $(event.target).addClass("dropover-active");
+    $(".bottom-trash").addClass("bottom-trash-active");
   },
   out: function(event) {
-    // console.log("out", event.target);
+    $(event.target).removeClass("dropover-active");
+    $(".bottom-trash").removeClass("bottom-trash-active");
   },
   update: function(event) {
     var tempArr = [];
@@ -256,7 +260,7 @@ $("#task-form-modal").on("shown.bs.modal", function() {
 });
 
 // save button in modal was clicked
-$("#task-form-modal .btn-primary").click(function() {
+$("#task-form-modal .btn-save").click(function() {
   // get form values
   var taskText = $("#modalTaskDescription").val();
   var taskDate = $("#modalDueDate").val();
@@ -288,5 +292,11 @@ $("#remove-tasks").on("click", function() {
 
 // load tasks for the first time
 loadTasks();
+
+setInterval(function(){
+  $(".card .list-group-item").each(function(index, el){
+    auditTask(el);
+  });
+}, (1800000));
 
 
